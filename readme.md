@@ -4,4 +4,4 @@ This will display the percent of the work day that's passed (8am - 5pm) as an Ub
 
 ![image](https://i.imgur.com/JLUmx5o.png)
 
-To run detached: `nohup python3 work_day_percent_applet.py >/dev/null 2>&1 &`
+To run detached execute `run.sh`
