@@ -1,4 +1,4 @@
-#Work Day Percentage Display Applet
+# Work Day Percentage Display Applet
 
 This will display the percent of the work day that's passed (8am - 5pm) as an Ubuntu applet
 
