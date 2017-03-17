@@ -9,12 +9,12 @@ APPINDICATOR_ID = 'myappindicator'
 
 work_start_second = 60 * 60 * 8
 work_end_second = 60 * 60 * 17
-seconds_in_work_day = (work_end_second - work_start_second) + work_start_second
+seconds_in_work_day = work_end_second - work_start_second
 
 def work_percent():
     now = datetime.now()
     midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    seconds = (now - midnight).seconds
+    seconds = (now - midnight).seconds - work_start_second
     if seconds <= work_start_second:
         return 0
     elif seconds >= work_end_second:
