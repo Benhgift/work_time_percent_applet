@@ -13,13 +13,14 @@ seconds_in_work_day = work_end_second - work_start_second
 def work_percent():
     now = datetime.now()
     midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    seconds = (now - midnight).seconds - work_start_second
+    seconds = (now - midnight).seconds
     if seconds <= work_start_second:
         return 0
     elif seconds >= work_end_second:
         return 100
     else:
-        return (seconds/seconds_in_work_day) * 100
+        seconds_since_work = seconds - work_start_second
+        return (seconds_since_work/seconds_in_work_day) * 100
 
 def update_ui_number(indicator):
     indicator.set_label('%.3f' % work_percent() + '%', 'work time percent')
