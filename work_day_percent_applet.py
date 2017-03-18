@@ -1,4 +1,5 @@
 import signal
+import config
 from datetime import datetime
 from gi.repository import Gtk as gtk
 from gi.repository import GObject
@@ -6,8 +7,8 @@ from gi.repository import AppIndicator3 as appindicator
 
 APPINDICATOR_ID = 'myappindicator'
 
-work_start_second = 60 * 60 * 8
-work_end_second = 60 * 60 * 17
+work_start_second = 60 * 60 * config.start
+work_end_second = 60 * 60 * config.end
 seconds_in_work_day = work_end_second - work_start_second
 
 def work_percent():
