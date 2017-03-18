@@ -10,10 +10,11 @@ from gi.repository import AppIndicator3 as appindicator
 
 APPINDICATOR_ID = 'myappindicator'
 
-def main(start = config.start, end = config.end):
+def main(start=config.start, end=config.end, icon_num=0):
+    icons = [gtk.STOCK_APPLY, gtk.STOCK_ADD, gtk.STOCK_YES, gtk.STOCK_ABOUT]
     workPercent = work_percent.WorkPercent(start, end)
     signal.signal(signal.SIGINT, signal.SIG_DFL)
-    indicator = appindicator.Indicator.new(APPINDICATOR_ID, gtk.STOCK_APPLY, appindicator.IndicatorCategory.SYSTEM_SERVICES)
+    indicator = appindicator.Indicator.new(APPINDICATOR_ID, icons[icon_num], appindicator.IndicatorCategory.SYSTEM_SERVICES)
     GObject.timeout_add(1000, workPercent.update_ui_number, indicator)
     indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
     indicator.set_menu(build_menu())
