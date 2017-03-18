@@ -1,6 +1,5 @@
 import signal
 from datetime import datetime
-from time import sleep
 from gi.repository import Gtk as gtk
 from gi.repository import GObject
 from gi.repository import AppIndicator3 as appindicator
