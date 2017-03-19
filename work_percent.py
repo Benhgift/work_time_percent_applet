@@ -10,8 +10,8 @@ class WorkPercent:
 
     def work_percent(self):
         now = datetime.now()
-        midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-        seconds = (now - midnight).seconds
+        start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        seconds = (now - start_of_day).seconds
         if seconds <= self.work_start:
             return 0
         elif seconds >= self.work_end:
