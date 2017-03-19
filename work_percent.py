@@ -1,3 +1,4 @@
+import config
 from datetime import datetime
 
 
@@ -20,5 +21,7 @@ class WorkPercent:
             return (seconds_since_work/self.seconds_in_work_day) * 100
 
     def update_ui_number(self, indicator):
-        indicator.set_label('%.3f' % self.work_percent() + '%', 'work time percent')
+        display_string = '%.{}f'.format(config.decimal_places)
+        display_string = display_string % self.work_percent() + '%'
+        indicator.set_label(display_string, 'work time percent')
         return True
