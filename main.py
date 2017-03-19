@@ -16,6 +16,7 @@ def main(start=config.start, end=config.end, icon_num=0):
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     indicator = appindicator.Indicator.new(APPINDICATOR_ID, icons[icon_num], appindicator.IndicatorCategory.SYSTEM_SERVICES)
     GObject.timeout_add(1000, workPercent.update_ui_number, indicator)
+    indicator.set_icon("img/icon.png")
     indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
     indicator.set_menu(build_menu())
     gtk.main()
