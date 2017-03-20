@@ -74,3 +74,4 @@ class WorkPercent:
             print('Current Minutes Progressed: %s' % (self.work_progress))
             print('Current Percentage: %s' % (self.work_percentage))
             print('\n')
+
