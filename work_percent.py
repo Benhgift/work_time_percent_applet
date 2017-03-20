@@ -45,6 +45,7 @@ class WorkPercent:
 			self.work_progress = ((self.hours - self.start_hours) * 60 ) + (self.minutes) + (self.seconds / 60)
 			# Calculate percentage and return.
 			self.work_percentage = (self.work_progress / self.work_total_time) * 100
+			self.printDebug(False)
 			return self.work_percentage
 		else:
 			# Else return 0%.
@@ -56,4 +57,16 @@ class WorkPercent:
 		display_string = display_string % self.work_percent() + '%'
 		indicator.set_label(display_string, 'work time percent')
 		return True
-
+	
+	def printDebug(self, enabled):
+		if enabled:
+			print('---- DEBUG ----')
+			print('Start Time: %s' % (self.work_start))
+			print('End Time: %s' % (self.work_end))
+			print('Total Work Time (minutes): %s' % (self.work_total_time))
+			print('Current Hours: %s' % (self.hours))
+			print('Current Minutes: %s' % (self.minutes))
+			print('Current Seconds: %s' % (self.seconds))
+			print('Current Minutes Progressed: %s' % (self.work_progress))
+			print('Current Percentage: %s' % (self.work_percentage))
+			print('\n')
