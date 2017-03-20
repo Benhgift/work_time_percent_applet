@@ -1,4 +1,5 @@
 # Work Day Percentage Display Applet
+![image](https://travis-ci.org/Benhgift/work_time_percent_applet.svg?branch=master)
 
 This will display the percent of the work day that's passed (8am - 5pm) as an Ubuntu applet
 
@@ -10,7 +11,7 @@ To run: `python3 main.py`
 
 To run on boot open the Ubuntu "Startup Applications" app and add an entry for `main.py`
 
-If you want a different time range then pass it in, for example: `main.py 9 20`
+If you want a different time range then pass it in, for example: `python3 main.py 9 20`
  or edit the `config.py` file to change the defaults. 
 
 # Tests
