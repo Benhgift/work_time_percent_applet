@@ -1,5 +1,6 @@
-# Work Day Percentage Display Applet
 ![image](https://travis-ci.org/Benhgift/work_time_percent_applet.svg?branch=master)
+
+# Work Day Percentage Display Applet
 
 This will display the percent of the work day that's passed (8am - 5pm) as an Ubuntu applet
 
