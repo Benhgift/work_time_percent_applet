@@ -27,11 +27,11 @@ class WorkPercent:
             self.work_end = self.work_end.replace(hour=0, minute=0, second=0, microsecond=0)
         else:
             self.work_end = datetime.now().replace(hour=self.end_hours, minute=self.end_minutes, second=self.end_seconds, microsecond=0)
+        if self.work_start > self.work_end:
+            self.work_end = self.work_end + timedelta(hours=24)
 
     def work_percent(self):
         # If start time is later than end time, add 24 hours (1 day).
-        if self.work_start > self.work_end:
-            self.work_end = self.work_end + timedelta(hours=24)
         # Calculate total work time (in minutes).
         self.total_added_mins = self.start_added_mins + self.end_added_mins
         self.work_total_time = ((self.work_end - self.work_start).total_seconds() / 60) + self.total_added_mins
