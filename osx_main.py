@@ -3,8 +3,12 @@ import work_percent
 
 
 def main(start, end, decimal_places):
+    # Make menu item to show what time is set when a user clicks on the percentage
+    menu_item = rumps.MenuItem('Time set from {} to {}'.format(start, end))
+
     percent_tracker = work_percent.WorkPercent(start, end, decimal_places)
     app = WorkPercentApp(percent_tracker, decimal_places)
+    app.menu.add(menu_item)
 
     app.run()
 
@@ -13,6 +17,8 @@ class WorkPercentApp(rumps.App):
     def __init__(self, percent_tracker, decimal_places):
         super().__init__("Work Percentage App")
 
+        self.start = start
+        self.end = end
         self.percent_tracker = percent_tracker
         self.decimal_places = decimal_places
 
