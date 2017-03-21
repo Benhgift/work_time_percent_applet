@@ -1,77 +1,67 @@
 import config
-from datetime import datetime, timedelta, date
-import time
+from datetime import datetime, timedelta
 
 
 class WorkPercent:
     def __init__(self, work_start, work_end):
-        # Determine start and end times.
-        self.work_start = float(work_start)
-        self.work_end = float(work_end)
-        self.work_start_int = int(work_start)
-        self.work_end_int = int(work_end)
-        # Break up each start and end time into hours, minutes, seconds.
-        self.start_hours = int(self.work_start)
-        self.start_added_mins = int((self.work_start % 1) * 60)
-        self.start_minutes = (self.work_start_int * 60) % 60
-        self.start_minutes = self.start_minutes + self.start_added_mins
-        self.start_seconds = (self.work_start_int * 3600) % 60
-        self.work_start = datetime.now().replace(hour=self.start_hours, minute=self.start_minutes, second=self.start_seconds, microsecond=0)
-        self.end_hours = int(self.work_end)
-        self.end_added_mins = int((self.work_end % 1) * 60)
-        self.end_minutes = (self.work_end_int * 60) % 60
-        self.end_minutes = self.end_minutes + self.end_added_mins
-        self.end_seconds = (self.work_end_int * 3600) % 60
-        if (work_end == 24):
-            self.work_end = datetime.now() + timedelta(days=1)
-            self.work_end = self.work_end.replace(hour=0, minute=0, second=0, microsecond=0)
-        else:
-            self.work_end = datetime.now().replace(hour=self.end_hours, minute=self.end_minutes, second=self.end_seconds, microsecond=0)
-        if self.work_start > self.work_end:
-            self.work_end = self.work_end + timedelta(hours=24)
+        # These will be handled based on if we're passing midnight
+        self.work_time_comparison_funcs = []
+        self.seconds_from_start_till_now = None
+        self.work_seconds = None
+
+        self.start = self._make_time_object(work_start)
+        self.end = self._make_time_object(work_end)
+        if not self._try_setup_midnight_functions():
+            self._setup_normal_functions()
 
     def work_percent(self):
-        # If start time is later than end time, add 24 hours (1 day).
-        # Calculate total work time (in minutes).
-        self.total_added_mins = self.start_added_mins + self.end_added_mins
-        self.work_total_time = ((self.work_end - self.work_start).total_seconds() / 60) + self.total_added_mins
-        # Get current time and separate it into hours, minutes, seconds.
-        self.work_progress = datetime.now()
-        self.hours = float(self.work_progress.strftime('%H'))
-        self.minutes = float(self.work_progress.strftime('%M'))
-        self.seconds = float(self.work_progress.strftime('%S'))
-        # If time is past start time, return 100%.
-        if self.hours >= self.end_hours and self.minutes >= self.end_minutes:
-            self.work_percentage = 100.0
-            return self.work_percentage
-        if self.start_hours <= self.hours and self.start_minutes <= self.minutes:
-            # Calculate current time since work start (in minutes).
-            self.work_progress = ((self.hours - self.start_hours) * 60 ) + (self.minutes) + (self.seconds / 60)
-            # Calculate percentage and return.
-            self.work_percentage = (self.work_progress / self.work_total_time) * 100
-            self.printDebug(False)
-            return self.work_percentage
+        now = datetime.now().replace(1, 1, 1)
+        if any([working_during(now) for working_during in self.work_time_comparison_funcs]):
+            return (self.seconds_from_start_till_now(now) / self.work_seconds) * 100
         else:
-            # Else return 0%.
-            self.work_percentage = 0.0
-            return self.work_percentage
+            return 100
 
     def update_ui_number(self, indicator):
-        display_string = '%.{}f'.format(config.decimal_places)
-        display_string = display_string % self.work_percent() + '%'
+        display_string = '{0:.{1}f}%'.format(self.work_percent(), config.decimal_places)
         indicator.set_label(display_string, 'work time percent')
         return True
 
-    def printDebug(self, enabled):
-        if enabled:
-            print('---- DEBUG ----')
-            print('Start Time: %s' % (self.work_start))
-            print('End Time: %s' % (self.work_end))
-            print('Total Work Time (minutes): %s' % (self.work_total_time))
-            print('Current Hours: %s' % (self.hours))
-            print('Current Minutes: %s' % (self.minutes))
-            print('Current Seconds: %s' % (self.seconds))
-            print('Current Minutes Progressed: %s' % (self.work_progress))
-            print('Current Percentage: %s' % (self.work_percentage))
-            print('\n')
+    def _try_setup_midnight_functions(self):
+        if self.start < self.end:
+            return False
+        self.work_time_comparison_funcs = [
+            lambda now: now < self.end,
+            lambda now: now > self.start
+        ]
+        self._setup_midnight_seconds_func()
+        return True
+
+    def _setup_midnight_seconds_func(self):
+        secs_in_day = 60 * 60 * 24
+        secs_from_end_to_12pm = secs_in_day - self._get_secs(self.start)
+
+        def time_passed(now):
+            if now > self.start:
+                return (now - self.start).total_seconds()
+            else:
+                return self._get_secs(now) + secs_from_end_to_12pm
+        self.seconds_from_start_till_now = time_passed
+        self.work_seconds = secs_from_end_to_12pm + self._get_secs(self.end)
+
+    def _setup_normal_functions(self):
+        self.work_time_comparison_funcs = [lambda now: self.start < now <= self.end]
+        self.seconds_from_start_till_now = lambda now: (now - self.start).seconds
+        self.work_seconds = (self.end - self.start).total_seconds()
+        return True
+
+    @staticmethod
+    def _get_secs(_time):
+        return (_time - datetime(1, 1, 1)).total_seconds()
+
+    @staticmethod
+    def _make_time_object(target_time):
+        hour = int(target_time) % 24
+        minute = int((target_time - hour) * 60)
+        second = int((target_time - hour) * 3600) % 60
+        return datetime(1, 1, 1, hour=hour, minute=minute, second=second, microsecond=0)
 
