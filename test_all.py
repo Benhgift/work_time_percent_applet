@@ -34,6 +34,6 @@ def test_percent_calculation_with_floats():
 
 
 def _test_half_way_between_range(start, end):
-    workPercent = work_percent.WorkPercent(start, end)
+    workPercent = work_percent.WorkPercent(start, end, 3)
     percent = workPercent.work_percent()
     assert percent == 50
