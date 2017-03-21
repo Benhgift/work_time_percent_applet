@@ -13,7 +13,7 @@ def main(start=config.start, end=config.end, decimal_places=config.decimal_place
     system = platform.system()
     if system == "Linux":
         import ubuntu_main
-        ubuntu_main.main(start, end, icon_num, decimal_places)
+        ubuntu_main.main(start, end, decimal_places, icon_num)
 
     elif system == "Darwin":
         import osx_main
