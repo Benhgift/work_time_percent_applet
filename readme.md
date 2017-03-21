@@ -2,18 +2,29 @@
 
 # Work Day Percentage Display Applet
 
-This will display the percent of the work day that's passed (8am - 5pm) as an Ubuntu applet
+This will display the percent of the work day that's passed (8am - 5pm) as an Ubuntu or OSX toolbar applet
 
 ![image](https://i.imgur.com/HAxybM0.png)
 
 # Quickstart
 
-To run: `python3 main.py`
-
-To run on boot open the Ubuntu "Startup Applications" app and add an entry for `main.py`
+To run: `python3 main.py # 8AM to 5PM by default`
 
 If you want a different time range then pass it in, for example: `python3 main.py 9 20`
- or edit the `config.py` file to change the defaults. 
+or edit the `config.py` file to change the defaults.
+
+# Ubuntu
+To run on boot open the Ubuntu "Startup Applications" app and add an entry for `main.py`
+## Requirements
+You'll need to install the `fire` package
+
+`pip3 install fire`
+
+# OSX
+## Requirements
+You'll need to install the `fire` and `rumps` packages
+
+`pip3 install fire rumps`
 
 # Tests
 
