@@ -26,3 +26,5 @@ You can edit the start and end times in the `config.py` file, and change the num
 You can also change the icon that appears next to the applet by passing in a number from 0-4 for `--icon_num` when you run the applet: 
 
 `python3 main.py --icon_num=1`
+
+You can also run it as a full day percentage with `python3 main.py 0 0`
