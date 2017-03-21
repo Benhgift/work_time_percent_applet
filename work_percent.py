@@ -1,9 +1,8 @@
-import config
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class WorkPercent:
-    def __init__(self, work_start, work_end):
+    def __init__(self, work_start, work_end, decimal_places):
         # These will be handled based on if we're passing midnight
         self.work_time_comparison_funcs = []
         self.seconds_from_start_till_now = None
@@ -14,6 +13,8 @@ class WorkPercent:
         if not self._try_setup_midnight_functions():
             self._setup_normal_functions()
 
+        self.decimal_places = decimal_places
+
     def work_percent(self):
         now = datetime.now().replace(1, 1, 1)
         if any([working_during(now) for working_during in self.work_time_comparison_funcs]):
@@ -22,7 +23,7 @@ class WorkPercent:
             return 100
 
     def update_ui_number(self, indicator):
-        display_string = '{0:.{1}f}%'.format(self.work_percent(), config.decimal_places)
+        display_string = '{0:.{1}f}%'.format(self.work_percent(), self.decimal_places)
         indicator.set_label(display_string, 'work time percent')
         return True
 

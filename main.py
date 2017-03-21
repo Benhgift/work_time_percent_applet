@@ -1,47 +1,24 @@
 #!/usr/bin/env python3
 
-import config
+import platform
 import fire
 import signal
-import sys
-import gi
-from os import path
-from work_percent import WorkPercent
-#Check version.
-gi.require_version('Gtk', '3.0')
-gi.require_version('AppIndicator3', '0.1')
-from gi.repository import Gtk as gtk
-from gi.repository import GObject
-from gi.repository import AppIndicator3 as appindicator
+import config
 
 
-APPINDICATOR_ID = 'myappindicator'
-
-
-def main(start=config.start, end=config.end, icon_num=0):
-    script_path = path.abspath(path.dirname(sys.argv[0]))
-    blank_icon = path.join(script_path, 'img', 'icon.png')
-    icons = [blank_icon, gtk.STOCK_APPLY, gtk.STOCK_ADD, gtk.STOCK_YES, gtk.STOCK_ABOUT]
-    work_percent = WorkPercent(start, end)
+def main(start=config.start, end=config.end, decimal_places=config.decimal_places, icon_num=0):
+    # Let ctrl-c kill the applet
     signal.signal(signal.SIGINT, signal.SIG_DFL)
-    indicator = appindicator.Indicator.new(APPINDICATOR_ID, icons[icon_num], appindicator.IndicatorCategory.SYSTEM_SERVICES)
-    GObject.timeout_add(1000, work_percent.update_ui_number, indicator)
-    indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
-    indicator.set_menu(build_menu())
-    gtk.main()
 
+    system = platform.system()
+    if system == "Linux":
+        import ubuntu_main
+        ubuntu_main.main(start, end, decimal_places, icon_num)
 
-def build_menu():
-    menu = gtk.Menu()
-    item_quit = gtk.MenuItem('Quit')
-    item_quit.connect('activate', quit)
-    menu.append(item_quit)
-    menu.show_all()
-    return menu
+    elif system == "Darwin":
+        import osx_main
+        osx_main.main(start, end, decimal_places)
 
-
-def quit(source):
-    gtk.main_quit()
 
 if __name__ == "__main__":
     fire.Fire(main)
