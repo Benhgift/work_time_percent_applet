@@ -27,6 +27,12 @@ def test_full_day_starting_at_noon():
     _test_half_way_between_range(12, 12)
 
 
+@freeze_time("01:00:00")
+def test_percent_calculation_with_floats():
+    """ Test that calculations work with floating point numbers """
+    _test_half_way_between_range(22.5, 3.5)
+
+
 def _test_half_way_between_range(start, end):
     workPercent = work_percent.WorkPercent(start, end)
     percent = workPercent.work_percent()
